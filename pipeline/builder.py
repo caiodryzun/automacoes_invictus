@@ -45,15 +45,19 @@ def _guardrails(cfg: ClientConfig) -> str:
     blocos = []
     if cfg.fatos_validados:
         blocos.append(
-            "FATOS VALIDADOS — ao citar atributos/comodidades reais do cliente, use "
-            "SOMENTE os itens abaixo. NUNCA invente, suponha ou generalize outros "
-            "(estrelas, nº de quartos, preços, serviços não listados):\n"
+            "FATOS VALIDADOS — esta é a ÚNICA fonte de comodidades, estrutura e serviços "
+            "do cliente. TODO item citado no artigo (inclusive em seções de critérios, "
+            "dicas, 'o que avaliar' ou mitos e verdades) deve se restringir a esta lista. "
+            "NUNCA invente, suponha ou generalize outros (estrelas, nº de quartos, preços, "
+            "comodidades ou serviços não listados):\n"
             + "\n".join(f"- {f}" for f in cfg.fatos_validados)
         )
     if cfg.restricoes:
         blocos.append(
-            "NÃO AFIRME NEM SUGIRA como atributo do cliente (não é preciso negar que "
-            "exista; apenas não cite):\n"
+            "NÃO MENCIONE os itens abaixo em hipótese alguma — nem como atributo do "
+            "cliente, nem como exemplo, critério, dica ou conselho genérico. Num artigo "
+            "que conduz o leitor à empresa, QUALQUER menção é lida como disponibilidade. "
+            "Não negue que existam; simplesmente não os cite:\n"
             + "\n".join(f"- {r}" for r in cfg.restricoes)
         )
     if cfg.direcionamento:
