@@ -54,6 +54,15 @@ class ClientConfig:
     diferencial: str = ""
     credenciais: str = ""
 
+    # Guardrails factuais (opcional). Quando preenchidos, são injetados nos prompts
+    # do redator e do revisor para conter alucinação de atributos do cliente.
+    #   fatos_validados: ÚNICAS comodidades/atributos reais que o texto pode afirmar.
+    #   restricoes:      coisas a NÃO afirmar nem sugerir como atributo.
+    #   direcionamento:  como conduzir o leitor à empresa, mesmo em temas gerais.
+    fatos_validados: list[str] = field(default_factory=list)
+    restricoes: list[str] = field(default_factory=list)
+    direcionamento: str = ""
+
     # Controle de extensão do post.
     # Gemini Flash entrega sistematicamente ~40% acima do alvo pedido no prompt,
     # então pedimos um alvo menor para que o resultado real fique perto de 1100-1200 palavras.
