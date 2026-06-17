@@ -36,6 +36,31 @@ def _tom(cfg: ClientConfig) -> str:
     )
 
 
+def _guardrails(cfg: ClientConfig) -> str:
+    """Bloco de guardrails factuais derivado da config (vazio se nada preenchido).
+
+    Mantém o texto preso a atributos reais do cliente e evita que o LLM invente
+    comodidades. Só aparece no prompt quando o cliente define algum dos campos.
+    """
+    blocos = []
+    if cfg.fatos_validados:
+        blocos.append(
+            "FATOS VALIDADOS — ao citar atributos/comodidades reais do cliente, use "
+            "SOMENTE os itens abaixo. NUNCA invente, suponha ou generalize outros "
+            "(estrelas, nº de quartos, preços, serviços não listados):\n"
+            + "\n".join(f"- {f}" for f in cfg.fatos_validados)
+        )
+    if cfg.restricoes:
+        blocos.append(
+            "NÃO AFIRME NEM SUGIRA como atributo do cliente (não é preciso negar que "
+            "exista; apenas não cite):\n"
+            + "\n".join(f"- {r}" for r in cfg.restricoes)
+        )
+    if cfg.direcionamento:
+        blocos.append("DIRECIONAMENTO: " + cfg.direcionamento)
+    return "\n\n".join(blocos)
+
+
 def build_crew(cfg: ClientConfig, tema: str, palavra_chave: str) -> Crew:
     serp = buscar_serp(palavra_chave)                       # 1 única chamada à SERP
     concorrencia = texto_concorrencia(serp)
@@ -44,6 +69,7 @@ def build_crew(cfg: ClientConfig, tema: str, palavra_chave: str) -> Crew:
     p_min, p_max = cfg.target_palavras
     teto = cfg.teto_palavras
     tom = _tom(cfg)
+    guardrails = _guardrails(cfg)
 
     links_internos_txt = "\n".join(
         f"- {li.titulo}: {li.url} | âncora sugerida: {li.anchor}" for li in cfg.links_internos
@@ -83,6 +109,8 @@ EXTENSÃO: entre {p_min} e {p_max} palavras no total. NUNCA ultrapasse {teto}. N
 {REGRA_KEYWORD}
 
 TOM: {tom}
+
+{guardrails}
 
 QUALIDADE OBRIGATÓRIA:
 - SEO local: insira "{cfg.localidade}" de forma natural no corpo (mínimo 2 menções, sem repetição artificial).
@@ -145,6 +173,9 @@ Revise o HTML COM LINKS (saída da linkagem) e devolva a VERSÃO FINAL já corri
 
 Aplique melhorias de: ortografia PT-BR, fluidez, tom adequado, distribuição dos links, alinhamento à intenção de busca e à palavra-chave '{palavra_chave}'.
 {tom}
+
+{guardrails}
+Se o texto recebido afirmar qualquer comodidade/atributo fora dos FATOS VALIDADOS, ou citar algo da lista de restrições, CORRIJA: remova ou reescreva conforme as regras acima (sem inventar substitutos).
 
 REGRA INEGOCIÁVEL SOBRE LINKS: mantenha TODOS os <a> que apontam para o domínio oficial '{cfg.dominio_oficial}'. Esses são links internos legítimos do catálogo — no máximo melhore o texto da âncora, NUNCA remova o link nem invente novas URLs.
 
