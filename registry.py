@@ -34,6 +34,12 @@ from clients.moc_advogados import CONFIG as CFG_MOC_ADVOGADOS
 from clients.people_partner import CONFIG as CFG_PEOPLE_PARTNER
 from clients.dr_raimundo import CONFIG as CFG_DR_RAIMUNDO
 from clients.pousada_maze import CONFIG as CFG_POUSADA_MAZE
+from clients.casa_vie import CONFIG as CFG_CASA_VIE
+from clients.dr_dolci import CONFIG as CFG_DR_DOLCI
+from clients.dra_diana import CONFIG as CFG_DRA_DIANA
+from clients.dra_luani import CONFIG as CFG_DRA_LUANI
+from clients.dr_wiler import CONFIG as CFG_DR_WILER
+from clients.vivite_harmony import CONFIG as CFG_VIVITE_HARMONY
 
 # ── Clientes legados (crews antigos, intactos até migração) ─────────────────────
 # Clientes NÃO incluídos na lista de migração do usuário continuam usando o crew antigo.
@@ -82,6 +88,12 @@ REGISTRO = {
     "people_partner": _novo(CFG_PEOPLE_PARTNER),
     "dr_raimundo":    _novo(CFG_DR_RAIMUNDO),
     "pousada_maze":   _novo(CFG_POUSADA_MAZE),
+    "casa_vie":      _novo(CFG_CASA_VIE),
+    "dr_dolci":      _novo(CFG_DR_DOLCI),
+    "dra_diana":     _novo(CFG_DRA_DIANA),
+    "dra_luani":     _novo(CFG_DRA_LUANI),
+    "dr_wiler":      _novo(CFG_DR_WILER),
+    "vivite_harmony":_novo(CFG_VIVITE_HARMONY),
 
     # ── Legados (não estavam na lista de migração; intactos) ───────────────
     "dra_francine":   _legado(build_crew_francine, san_francine),
